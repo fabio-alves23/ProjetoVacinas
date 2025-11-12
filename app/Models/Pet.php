@@ -2,21 +2,21 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Pet extends Model
 {
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
 
- protected $fillable = [
-    'user_id',
-    'name',
-    'species',
-    'breed',
-    'birthdate',
-];
-
+    protected $fillable = [
+        'user_id',
+        'name',
+        'species',
+        'breed',
+        'birthdate',
+    ];
 
     public function user()
     {
@@ -29,8 +29,7 @@ class Pet extends Model
     }
 
     public function agendamentos()
-{
-    return $this->hasMany(AgendamentoDeVacina::class);
-}
-
+    {
+        return $this->hasMany(AgendamentoDeVacina::class);
+    }
 }

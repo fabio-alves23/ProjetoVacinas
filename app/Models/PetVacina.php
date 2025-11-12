@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory; // adicione isto
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PetVacina extends Model
 {
-    use SoftDeletes;
+    use HasFactory, SoftDeletes; // adicione HasFactory aqui
 
     protected $fillable = [
         'pet_id', 'vacina_id', 'data_aplicacao', 'data_proxima_dose',
@@ -23,7 +24,5 @@ class PetVacina extends Model
         return $this->belongsTo(\App\Models\Vacina::class);
     }
 }
-
-
 
 

@@ -10,7 +10,7 @@ class StorePetRequest extends FormRequest
     {
         return [
             'name'      => ['required', 'string', 'max:255'],
-            'species'   => ['nullable', 'string', 'max:100'],
+            'species'   => ['required', 'string', 'max:100'],
             'breed'     => ['nullable', 'string', 'max:100'],
             'birthdate' => ['nullable', 'date'],
         ];
