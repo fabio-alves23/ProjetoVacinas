@@ -13,11 +13,9 @@ class AgendamentoTest extends TestCase
 {
     use RefreshDatabase;
 
-    #[\PHPUnit\Framework\Attributes\Test]
-    public function pode_criar_um_agendamento()
+    public function test_usuario_pode_criar_agendamento()
     {
-        $user = User::factory()->create();
-        $this->actingAs($user, 'sanctum');
+        $user = $this->actingAsUser();
 
         $pet = Pet::factory()->create();
         $vacina = Vacina::factory()->create();
@@ -45,11 +43,9 @@ class AgendamentoTest extends TestCase
         ]);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
-    public function nao_pode_criar_agendamento_com_dados_invalidos()
+    public function test_nao_pode_criar_agendamento_com_dados_invalidos()
     {
-        $user = User::factory()->create();
-        $this->actingAs($user, 'sanctum');
+        $user = $this->actingAsUser();
 
         $dados = [
             'pet_id' => null,
@@ -63,11 +59,9 @@ class AgendamentoTest extends TestCase
                  ->assertJsonValidationErrors(['pet_id', 'vacina_id', 'data_agendada']);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
-    public function pode_listar_agendamentos()
+    public function test_usuario_pode_listar_agendamentos()
     {
-        $user = User::factory()->create();
-        $this->actingAs($user, 'sanctum');
+        $user = $this->actingAsUser();
 
         $agendamento = AgendamentoDeVacina::factory()->create([
             'observacoes' => 'Vacina anual',
@@ -85,11 +79,9 @@ class AgendamentoTest extends TestCase
                  ]);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
-    public function nao_pode_criar_agendamento_no_mesmo_horario()
+    public function test_nao_pode_criar_agendamento_no_mesmo_horario()
     {
-        $user = User::factory()->create();
-        $this->actingAs($user, 'sanctum');
+        $user = $this->actingAsUser();
 
         $pet = Pet::factory()->create();
         $vacina = Vacina::factory()->create();
@@ -107,9 +99,10 @@ class AgendamentoTest extends TestCase
             'data_agendada' => $dataHora,
         ];
 
+        // OBS: sua API ainda permite criar duplicado,
+        // então por enquanto esperamos 201.
         $response = $this->postJson('/api/agendamento-de-vacinas', $dados);
 
-        // Temporário: API ainda não bloqueia duplicados
         $response->assertStatus(201);
     }
 }
