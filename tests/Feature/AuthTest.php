@@ -9,8 +9,7 @@ class AuthTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
-    public function deve_registrar_usuario()
+    public function test_deve_registrar_usuario()
     {
         $response = $this->postJson('/api/register', [
             'name' => 'Teste User',
@@ -22,8 +21,7 @@ class AuthTest extends TestCase
         $response->assertStatus(200);
     }
 
-    /** @test */
-    public function deve_fazer_login()
+    public function test_deve_fazer_login()
     {
         // primeiro registra o usuário
         $this->postJson('/api/register', [
