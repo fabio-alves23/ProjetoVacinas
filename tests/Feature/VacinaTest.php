@@ -3,25 +3,16 @@
 namespace Tests\Feature;
 
 use App\Models\Vacina;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class VacinaTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected function authenticate()
+    public function test_usuario_autenticado_pode_listar_vacinas()
     {
-        $user = User::factory()->create();
-        Sanctum::actingAs($user, ['*']);
-    }
-
-    /** @test */
-    public function pode_listar_vacinas()
-    {
-        $this->authenticate(); // autentica antes de acessar a rota
+        $user = $this->actingAsUser();
 
         Vacina::factory()->count(3)->create();
 
@@ -30,11 +21,10 @@ class VacinaTest extends TestCase
         $response->assertStatus(200)
                  ->assertJsonCount(3, 'data');
     }
-    
-    /** @test */
-    public function pode_criar_uma_vacina()
+
+    public function test_usuario_autenticado_pode_criar_vacina()
     {
-        $this->authenticate();
+        $user = $this->actingAsUser();
 
         $data = [
             'nome' => 'Vacina Teste',
@@ -47,49 +37,46 @@ class VacinaTest extends TestCase
         $response->assertStatus(201)
                  ->assertJsonFragment(['nome' => 'Vacina Teste']);
 
-        $this->assertDatabaseHas('vacinas', ['nome' => 'Vacina Teste']);
+        $this->assertDatabaseHas('vacinas', [
+            'nome' => 'Vacina Teste'
+        ]);
     }
 
-    /** @test */
-    public function pode_atualizar_uma_vacina()
+    public function test_usuario_autenticado_pode_atualizar_vacina()
     {
-        $this->authenticate();
+        $user = $this->actingAsUser();
 
         $vacina = Vacina::factory()->create([
-            'nome' => 'Antiga',
+            'nome' => 'Vacina Antiga',
             'validade' => now()->addYear()->toDateString(),
         ]);
 
         $response = $this->putJson("/api/vacinas/{$vacina->id}", [
-            'nome' => 'Nova Vacina',
+            'nome' => 'Vacina Atualizada',
             'validade' => now()->addYears(2)->toDateString(),
         ]);
 
         $response->assertStatus(200)
-                 ->assertJsonFragment(['nome' => 'Nova Vacina']);
+                 ->assertJsonFragment(['nome' => 'Vacina Atualizada']);
 
-        $this->assertDatabaseHas('vacinas', ['nome' => 'Nova Vacina']);
+        $this->assertDatabaseHas('vacinas', [
+            'id'   => $vacina->id,
+            'nome' => 'Vacina Atualizada',
+        ]);
     }
 
-    /** @test */
-   /** @test */
-public function pode_deletar_uma_vacina()
-{
-    $this->authenticate();
+    public function test_usuario_autenticado_pode_deletar_vacina()
+    {
+        $user = $this->actingAsUser();
 
-    $vacina = Vacina::factory()->create([
-        'nome' => 'Vacina para deletar',
-        'validade' => now()->addYear()->toDateString(),
-    ]);
+        $vacina = Vacina::factory()->create();
 
-    $response = $this->deleteJson("/api/vacinas/{$vacina->id}");
+        $response = $this->deleteJson("/api/vacinas/{$vacina->id}");
 
-    $response->assertStatus(204);
+        $response->assertStatus(204);
 
-    // Como usa SoftDeletes, verificamos se o registro foi "marcado como deletado"
-    $this->assertSoftDeleted('vacinas', [
-        'id' => $vacina->id,
-    ]);
-}
-
+        $this->assertSoftDeleted('vacinas', [
+            'id' => $vacina->id,
+        ]);
+    }
 }

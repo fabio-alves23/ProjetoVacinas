@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Models\User;
 use App\Models\Pet;
 
 class PetTest extends TestCase
@@ -13,8 +12,7 @@ class PetTest extends TestCase
 
     public function test_usuario_autenticado_pode_criar_pet()
     {
-        $user = User::factory()->create();
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $user = $this->actingAsUser();
 
         $payload = [
             'name' => 'Rex',
@@ -23,12 +21,10 @@ class PetTest extends TestCase
             'birthdate' => '2020-05-01',
         ];
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
-                         ->postJson('/api/pets', $payload);
+        $response = $this->postJson('/api/pets', $payload);
 
         $response->assertStatus(201)
-         ->assertJsonPath('name', 'Rex');
-
+                 ->assertJsonPath('name', 'Rex');
 
         $this->assertDatabaseHas('pets', [
             'name' => 'Rex',
@@ -38,13 +34,11 @@ class PetTest extends TestCase
 
     public function test_usuario_autenticado_pode_listar_pets()
     {
-        $user = User::factory()->create();
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $user = $this->actingAsUser();
 
         Pet::factory()->count(3)->create(['user_id' => $user->id]);
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
-                         ->getJson('/api/pets');
+        $response = $this->getJson('/api/pets');
 
         $response->assertStatus(200)
                  ->assertJsonCount(3, 'data');
@@ -52,16 +46,14 @@ class PetTest extends TestCase
 
     public function test_usuario_autenticado_pode_ver_detalhes_do_pet()
     {
-        $user = User::factory()->create();
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $user = $this->actingAsUser();
 
         $pet = Pet::factory()->create([
             'user_id' => $user->id,
             'name' => 'Rex'
         ]);
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
-                         ->getJson("/api/pets/{$pet->id}");
+        $response = $this->getJson("/api/pets/{$pet->id}");
 
         $response->assertStatus(200)
                  ->assertJsonPath('data.name', 'Rex');
@@ -69,18 +61,15 @@ class PetTest extends TestCase
 
     public function test_usuario_autenticado_pode_deletar_pet()
     {
-        $user = User::factory()->create();
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $user = $this->actingAsUser();
 
         $pet = Pet::factory()->create(['user_id' => $user->id]);
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
-                         ->deleteJson("/api/pets/{$pet->id}");
+        $response = $this->deleteJson("/api/pets/{$pet->id}");
 
         $response->assertStatus(200)
                  ->assertJson(['message' => 'Pet deletado com sucesso!']);
 
         $this->assertSoftDeleted('pets', ['id' => $pet->id]);
-
     }
 }
