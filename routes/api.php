@@ -23,6 +23,7 @@ Route::post('/login', [AuthController::class, 'login']);
     Route::get('/usuario', [UserController::class, 'show']);     // Ver dados
     Route::put('/usuario', [UserController::class, 'update']);   // Atualizar dados
     Route::delete('/usuario', [UserController::class, 'destroy']); // Excluir conta
+    
 
     // Pets
     Route::apiResource('pets', PetController::class);
@@ -33,7 +34,9 @@ Route::post('/login', [AuthController::class, 'login']);
     // Vacinas aplicadas em Pets
     Route::get('pets/{pet}/vacinas', [PetVacinaController::class, 'index']);
     Route::post('pets/{pet}/vacinas', [PetVacinaController::class, 'store']);
-    Route::delete('/petvacinas/{id}', [PetVacinaController::class, 'destroy']);      
+    Route::delete('/petvacinas/{id}', [PetVacinaController::class, 'destroy']);    
+    Route::put('/petvacinas/{id}', [PetVacinaController::class, 'update']);
+  
 
     // Pets excluídos
     Route::get('/pets/deleted', [PetController::class, 'deleted']);
