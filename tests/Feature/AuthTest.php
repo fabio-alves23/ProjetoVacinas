@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Models\User;
 
 class AuthTest extends TestCase
 {
@@ -19,16 +20,17 @@ class AuthTest extends TestCase
         ]);
 
         $response->assertStatus(200);
+        $this->assertDatabaseHas('users', [
+            'email' => 'teste@example.com',
+        ]);
     }
 
     public function test_deve_fazer_login()
     {
-        // primeiro registra o usuário
-        $this->postJson('/api/register', [
-            'name' => 'Teste User',
+        // cria o usuário manualmente
+        User::factory()->create([
             'email' => 'teste@example.com',
-            'password' => '12345678',
-            'password_confirmation' => '12345678',
+            'password' => bcrypt('12345678'),
         ]);
 
         // tenta logar
@@ -36,6 +38,16 @@ class AuthTest extends TestCase
             'email' => 'teste@example.com',
             'password' => '12345678',
         ]);
+
+        $response->assertStatus(200);
+    }
+
+    public function test_usuario_logado_acessa_rota_protegida()
+    {
+        // usa o helper do TestCase para autenticar via Sanctum
+        $this->actingAsUser();
+
+        $response = $this->getJson('/api/usuario');
 
         $response->assertStatus(200);
     }
