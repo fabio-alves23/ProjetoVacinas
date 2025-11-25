@@ -17,8 +17,8 @@ class AgendamentoTest extends TestCase
     {
         $user = $this->actingAsUser();
 
-        $pet = Pet::factory()->create();
-        $vacina = Vacina::factory()->create();
+        $pet = $this->createPet();
+        $vacina = $this->createVacina();
 
         $dados = [
             'pet_id' => $pet->id,
@@ -73,7 +73,7 @@ class AgendamentoTest extends TestCase
         $response->assertStatus(200)
                  ->assertJsonFragment([
                      'id' => $agendamento->id,
-                     'data_agendada' => $agendamento->data_agendada->format('Y-m-d H:i:s'),
+                     'data_agendada' => $agendamento->data_agendada->format('Y-m-d H:i:s'), 
                      'status' => $agendamento->status,
                      'observacoes' => $agendamento->observacoes,
                  ]);

@@ -16,8 +16,8 @@ class PetVacinaTest extends TestCase
     {
         $user = $this->actingAsUser();
 
-        $pet = Pet::factory()->create();
-        $vacina = Vacina::factory()->create();
+         $pet = $this->createPet();
+        $vacina = $this->createVacina();
 
         PetVacina::factory()->count(3)->create([
             'pet_id' => $pet->id,
@@ -35,8 +35,8 @@ class PetVacinaTest extends TestCase
     {
         $user = $this->actingAsUser();
 
-        $pet = Pet::factory()->create();
-        $vacina = Vacina::factory()->create();
+        $pet = $this->createPet();
+        $vacina = $this->createVacina();
 
         $dados = [
             'pet_id' => $pet->id,
@@ -62,9 +62,9 @@ class PetVacinaTest extends TestCase
     {
         $user = $this->actingAsUser();
 
-        $pet = Pet::factory()->create();
-        $vacina1 = Vacina::factory()->create();
-        $vacina2 = Vacina::factory()->create();
+        $pet = $this->createPet();
+        $vacina1 = $this->createVacina();
+        $vacina2 = $this->createVacina();
 
         $petVacina = PetVacina::factory()->create([
             'pet_id' => $pet->id,
