@@ -2,8 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\Pet;
-use App\Models\Vacina;
 use App\Models\PetVacina;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -16,7 +14,7 @@ class PetVacinaTest extends TestCase
     {
         $user = $this->actingAsUser();
 
-         $pet = $this->createPet();
+        $pet = $this->createPet();
         $vacina = $this->createVacina();
 
         PetVacina::factory()->count(3)->create([

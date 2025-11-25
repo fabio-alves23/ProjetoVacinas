@@ -4,9 +4,6 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use App\Models\User;
-use App\Models\Pet;
-use App\Models\Vacina;
 use App\Models\AgendamentoDeVacina;
 
 class AgendamentoTest extends TestCase
@@ -17,8 +14,8 @@ class AgendamentoTest extends TestCase
     {
         $user = $this->actingAsUser();
 
-        $pet = $this->createPet();
-        $vacina = $this->createVacina();
+       $pet = $this->createPet();
+       $vacina = $this->createVacina();
 
         $dados = [
             'pet_id' => $pet->id,
@@ -83,8 +80,8 @@ class AgendamentoTest extends TestCase
     {
         $user = $this->actingAsUser();
 
-        $pet = Pet::factory()->create();
-        $vacina = Vacina::factory()->create();
+        $pet = $this->createPet();
+        $vacina = $this->createVacina();
         $dataHora = now()->addDay()->format('Y-m-d H:i:s');
 
         AgendamentoDeVacina::factory()->create([
