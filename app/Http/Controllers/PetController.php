@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Http\Requests\Pet\StorePetRequest;
 use App\Http\Requests\Pet\UpdatePetRequest;
 use App\Http\Resources\PetResource;
@@ -15,6 +16,8 @@ use App\Models\Pet;
 
 class PetController extends Controller
 {
+    use AuthorizesRequests;
+
     public function index(IndexPetService $service, Request $request)
     {
         $pets = $service->run($request);
@@ -36,6 +39,7 @@ class PetController extends Controller
 
     public function update(UpdatePetRequest $request, Pet $pet, UpdatePetService $service)
     {
+        $this->authorize('update', $pet);
         $data = $request->validated();
         $pet = $service->run($data, $pet);
         return new PetResource($pet);
@@ -43,6 +47,7 @@ class PetController extends Controller
 
     public function destroy(Pet $pet, DeletePetService $service)
     {
+        $this->authorize('delete', $pet);
         $service->run($pet);
         return response()->json(['message' => 'Pet deletado com sucesso!'], 200);
     }
