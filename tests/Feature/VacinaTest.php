@@ -69,7 +69,7 @@ class VacinaTest extends TestCase
     {
         $user = $this->actingAsUser();
 
-        $vacina = Vacina::factory()->create();
+        $vacina = $this->createVacina();
 
         $response = $this->deleteJson("/api/vacinas/{$vacina->id}");
 
