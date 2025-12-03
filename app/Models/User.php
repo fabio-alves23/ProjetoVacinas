@@ -27,6 +27,17 @@ class User extends Authenticatable
     {
         return $this->hasMany(Pet::class);
     }
+
+    public function cargos()
+{
+    return $this->belongsToMany(Cargos::class);
+}
+
+public function hasCargo($nomeCargo)
+{
+    return $this->cargos()->where('nome', $nomeCargo)->exists();
+}
+
 }
 
 
