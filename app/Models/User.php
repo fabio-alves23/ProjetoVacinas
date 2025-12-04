@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens; // <-- obrigatório para tokens
+use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -29,15 +29,12 @@ class User extends Authenticatable
     }
 
     public function cargos()
-{
-    return $this->belongsToMany(Cargos::class);
+    {
+        return $this->belongsToMany(Cargos::class, 'cargos_user', 'user_id', 'cargo_id');
+    }
+
+    public function hasCargo(string $nomeCargo): bool
+    {
+        return $this->cargos()->where('nome', $nomeCargo)->exists();
+    }
 }
-
-public function hasCargo($nomeCargo)
-{
-    return $this->cargos()->where('nome', $nomeCargo)->exists();
-}
-
-}
-
-
