@@ -17,8 +17,8 @@ return new class extends Migration
     {
         Schema::create('permissoes', function (Blueprint $table) {
             $table->id();
-            $table->string('nome');
-            $table->text('descricao');
+            $table->string('name');
+            $table->string('description')->nullable();
 
             $table->softDeletes();
             $table->timestamps();
