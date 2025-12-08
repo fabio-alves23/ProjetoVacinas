@@ -3,21 +3,18 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use App\Models\Cargo;
 
 class CargosSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
-        DB::table('cargos')->insert([
-            [
-                'nome' => 'Administrador',
-                'description' => 'Acesso total ao sistema',
-            ],
-            [
-                'nome' => 'Atendente',
-                'description' => 'Pode gerenciar pets e vacinas',
-            ],
+        Cargos::create([
+            'nome' => 'admin'
+        ]);
+
+        Cargos::create([
+            'nome' => 'usuario'
         ]);
     }
 }

@@ -72,7 +72,7 @@ class PermissoesSeeder extends Seeder
             ],
 
             // ================================
-            // Permissões Pet-Vacina
+            // Permissões de Pet-Vacina
             // ================================
             [
                 'name' => 'index-petvacinas',
@@ -92,7 +92,7 @@ class PermissoesSeeder extends Seeder
             ],
 
             // ================================
-            // Permissões Agendamentos
+            // Permissões de Agendamentos
             // ================================
             [
                 'name' => 'index-agendamentos',
@@ -111,7 +111,9 @@ class PermissoesSeeder extends Seeder
                 'description' => 'Excluir agendamento',
             ],
 
-            // Permissão especial
+            // ================================
+            // Permissão Especial
+            // ================================
             [
                 'name' => 'relatorio-atrasados',
                 'description' => 'Gerar relatório de agendamentos atrasados',

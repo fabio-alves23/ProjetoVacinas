@@ -11,15 +11,8 @@ return new class extends Migration {
     {
         Schema::create('cargo_permissoes', function (Blueprint $table) {
             $table->id();
-
-            $table->foreignIdFor(Permissoes::class)
-                ->constrained('permissoes')
-                ->cascadeOnDelete();
-
-            $table->foreignIdFor(Cargos::class)
-                ->constrained('cargos')
-                ->cascadeOnDelete();
-
+            $table->foreignIdFor(Permissoes::class)->constrained('permissoes')->cascadeOnDelete();
+            $table->foreignIdFor(Cargos::class)->constrained('cargos')->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -29,3 +22,4 @@ return new class extends Migration {
         Schema::dropIfExists('cargo_permissoes');
     }
 };
+

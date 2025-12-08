@@ -3,25 +3,23 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use App\Models\Cargos;
+use App\Models\Permissoes;
 
 class CargoPermissoesSeeder extends Seeder
 {
     public function run()
     {
-        $adminCargoId = 1;
+        $admin = Cargos::where('nome', 'Administrador')->first();
+        $usuario = Cargos::where('nome', 'Usuario')->first();
 
-        // Buscar todas permissões
-        $permissoes = DB::table('permissoes')->pluck('id');
+        // Admin tem TODAS as permissões
+        $todas = Permissoes::pluck('id')->toArray();
+        $admin->permissoes()->sync($todas);
 
-        // Inserir na pivot cargos_permissoes
-        foreach ($permissoes as $permissaoId) {
-            DB::table('cargo_permissoes')->insert([
-                'permissoes_id' => $permissaoId,
-                'cargos_id'     => $adminCargoId,
-                'created_at'    => now(),
-                'updated_at'    => now(),
-            ]);
-        }
+        // Usuário só pode listar coisas
+        $usuario->permissoes()->sync(
+            Permissoes::where('nome', 'like', 'index-%')->pluck('id')->toArray()
+        );
     }
 }
