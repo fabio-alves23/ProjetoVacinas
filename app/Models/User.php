@@ -48,7 +48,7 @@ class User extends Authenticatable
 
     // Verifica se possui uma permissão específica
     public function hasPermissao(string $permissao): bool
-    {s
+    {
         return $this->cargos()
             ->whereHas('permissoes', function ($q) use ($permissao) {
                 $q->where('nome', $permissao);
